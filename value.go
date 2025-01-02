@@ -1,5 +1,19 @@
 package z
 
+// Ptr returns pointer to the temporal variable which value is equal to `v`.
+// This function is intended to use with the constants or literals.
+//
+//	v := Ptr(42) // Do
+//	v := Ptr(u) // Don't
+//	v := &u // Do
+//
+// Be careful with that returned pointer does not pointing `v` itself.
+//
+//	v != Ptr(v)
+func Ptr[T any](v T) *T {
+	return &v
+}
+
 // Fallback selects the first non-zero value from the given values.
 //
 //	Fallback(0, 0, 42)  // 42

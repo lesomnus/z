@@ -7,6 +7,19 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+func TestPtr(t *testing.T) {
+	t.Run("literal string", func(t *testing.T) {
+		v := z.Ptr("foo")
+		require.Equal(t, "foo", *v)
+	})
+	t.Run("string variable", func(t *testing.T) {
+		u := "foo"
+		v := z.Ptr(u)
+		require.Equal(t, u, *v)
+		require.NotSame(t, &u, v)
+	})
+}
+
 func TestFallback(t *testing.T) {
 	t.Run("zero2", func(t *testing.T) {
 		v := z.Fallback(0, 0)
