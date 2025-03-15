@@ -71,4 +71,9 @@ func TestFallbackP(t *testing.T) {
 		z.FallbackP(&v, 0, 42, -1)
 		require.Equal(t, 42, v)
 	})
+	t.Run("nil target", func(t *testing.T) {
+		require.Panics(t, func() {
+			z.FallbackP(nil, 0)
+		})
+	})
 }

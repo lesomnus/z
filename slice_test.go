@@ -35,6 +35,15 @@ func TestMap(t *testing.T) {
 
 		require.Equal(t, dst, []string{"2", "3", "4"})
 	})
+	t.Run("shorter dst", func(t *testing.T) {
+		src := []int{2, 3, 4}
+		dst := []int{0, 0}
+		z.Map(src, dst, func(v int) int {
+			return v * v
+		})
+
+		require.Equal(t, dst, []int{4, 9})
+	})
 }
 
 func TestMapped(t *testing.T) {

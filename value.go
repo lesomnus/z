@@ -9,7 +9,7 @@ package z
 //
 // Be careful with that returned pointer does not pointing `v` itself.
 //
-//	v != Ptr(v)
+//	&v != Ptr(v)
 func Ptr[T any](v T) *T {
 	return &v
 }
