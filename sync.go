@@ -1,6 +1,8 @@
 package z
 
-import "sync"
+import (
+	"sync"
+)
 
 type Exclusive[T any] struct {
 	m sync.Mutex
@@ -11,16 +13,30 @@ func NewExclusive[T any](v T) *Exclusive[T] {
 	return &Exclusive[T]{v: v}
 }
 
+func (e *Exclusive[T]) Get() T {
+	e.m.Lock()
+	defer e.m.Unlock()
+
+	return e.v
+}
+
+func (e *Exclusive[T]) Set(v T) {
+	e.m.Lock()
+	defer e.m.Unlock()
+
+	e.v = v
+}
+
 func (e *Exclusive[T]) Lock() (ExclusiveValue[T], func()) {
 	e.m.Lock()
 	return ExclusiveValue[T]{&e.v}, e.m.Unlock
 }
 
 func (e *Exclusive[T]) Use(f func(v ExclusiveValue[T])) {
-	v, unlock := e.Lock()
-	defer unlock()
+	e.m.Lock()
+	defer e.m.Unlock()
 
-	f(v)
+	f(ExclusiveValue[T]{&e.v})
 }
 
 type ExclusiveValue[T any] struct {
