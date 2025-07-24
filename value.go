@@ -40,5 +40,5 @@ func FallbackP[T comparable](a *T, b T, rest ...T) {
 	if a == nil {
 		panic("target must not nil")
 	}
-	*a = Fallback[T](*a, b, rest...)
+	*a = Fallback(*a, b, rest...)
 }
