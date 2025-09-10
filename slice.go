@@ -42,3 +42,20 @@ func MappedE[T any, U any](src []T, op func(v T) (U, error)) ([]U, error) {
 	dst := make([]U, len(src))
 	return MapE(src, dst, op)
 }
+
+func Filter[T any](src []T, dst []T, p func(v T) bool) []T {
+	for i := range src {
+		if !p(src[i]) {
+			continue
+		}
+
+		dst = append(dst, src[i])
+	}
+
+	return dst
+}
+
+func Filtered[T any](src []T, p func(v T) bool) []T {
+	dst := make([]T, 0, len(src))
+	return Filter(src, dst, p)
+}
