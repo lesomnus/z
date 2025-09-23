@@ -50,3 +50,21 @@ func (c ExclusiveValue[T]) Get() T {
 func (c ExclusiveValue[T]) Set(v T) {
 	*c.v = v
 }
+
+func ScopedLock(l sync.Locker, f func()) {
+	l.Lock()
+	defer l.Unlock()
+	f()
+}
+
+func ScopedLock1[T any](l sync.Locker, f func() T) T {
+	l.Lock()
+	defer l.Unlock()
+	return f()
+}
+
+func ScopedLock2[T any, U any](l sync.Locker, f func() (T, U)) (T, U) {
+	l.Lock()
+	defer l.Unlock()
+	return f()
+}
