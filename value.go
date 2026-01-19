@@ -1,5 +1,13 @@
 package z
 
+// Must returns the value if err is nil, otherwise it panics.
+func Must[T any](v T, err error) T {
+	if err != nil {
+		panic(err)
+	}
+	return v
+}
+
 // Ptr returns pointer to the temporal variable which value is equal to `v`.
 // This function is intended to use with the constants or literals.
 //
