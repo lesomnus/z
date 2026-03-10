@@ -1,5 +1,7 @@
 package z
 
+import "slices"
+
 // Map applies a given operation to each element of the `src` and stores the result in the `dst`.
 // The operation is defined by the `op`, which takes an element of type T from the `src` and returns an element of type U to be stored in the `dst`.
 // The function processes elements up to the length of the shorter slice between src and dst.
@@ -87,4 +89,14 @@ func FilterInPlace[T any](src []T, p func(v T) bool) []T {
 func FilteredInPlace[T any](src []T, p func(v T) bool) ([]T, []T) {
 	rst := FilterInPlace(src, p)
 	return rst, src[len(rst):]
+}
+
+// Find returns the first element in `src` that satisfies the predicate `p` and a boolean indicating whether such an element was found.
+func Find[T any](src []T, p func(v T) bool) (z T, ok bool) {
+	i := slices.IndexFunc(src, p)
+	if i < 0 {
+		return
+	}
+
+	return src[i], true
 }

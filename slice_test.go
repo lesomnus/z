@@ -105,3 +105,18 @@ func TestFilter(t *testing.T) {
 		require.Len(t, rst, 2)
 	})
 }
+
+func TestFind(t *testing.T) {
+	t.Run("found", func(t *testing.T) {
+		src := []int{1, 2, 3, 4, 5}
+		v, ok := z.Find(src, func(v int) bool { return v > 2 })
+		require.True(t, ok)
+		require.Equal(t, 3, v)
+	})
+	t.Run("not found", func(t *testing.T) {
+		src := []int{1, 2, 3, 4, 5}
+		v, ok := z.Find(src, func(v int) bool { return v > 5 })
+		require.False(t, ok)
+		require.Equal(t, 0, v)
+	})
+}
