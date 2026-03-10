@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"slices"
 	"testing"
 
 	"github.com/lesomnus/z"
@@ -88,5 +89,19 @@ func TestMapped(t *testing.T) {
 		})
 
 		require.Equal(t, []string{"2", "3", "4"}, dst)
+	})
+}
+
+func TestFilter(t *testing.T) {
+	t.Run("in place", func(t *testing.T) {
+		p := func(v int) bool {
+			return v < 3
+		}
+
+		src := []int{4, 3, 5, 2, 1}
+		rst, rest := z.FilteredInPlace(src, p)
+		require.True(t, z.AllOf(slices.Values(rst), p))
+		require.True(t, z.NoneOf(slices.Values(rest), p))
+		require.Len(t, rst, 2)
 	})
 }

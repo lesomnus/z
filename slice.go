@@ -43,6 +43,8 @@ func MappedE[T any, U any](src []T, op func(v T) (U, error)) ([]U, error) {
 	return MapE(src, dst, op)
 }
 
+// Filter appends elements of `src` that satisfy `p` into `dst` and returns the resulting `dst`.
+// For correctness, `dst` should not overlap `src`'s underlying array.
 func Filter[T any](src []T, dst []T, p func(v T) bool) []T {
 	for i := range src {
 		if !p(src[i]) {
@@ -55,7 +57,34 @@ func Filter[T any](src []T, dst []T, p func(v T) bool) []T {
 	return dst
 }
 
+// Filtered returns a newly allocated slice containing elements of `src` that satisfy `p`.
+// The relative order of kept elements is preserved.
 func Filtered[T any](src []T, p func(v T) bool) []T {
 	dst := make([]T, 0, len(src))
 	return Filter(src, dst, p)
+}
+
+// FilterInPlace partitions `src` in-place and returns the prefix containing elements that satisfy `p`.
+// Elements rejected by `p` are moved into the tail of the original slice (i.e., `src[len(result):]`).
+// The relative order of elements is not preserved.
+func FilterInPlace[T any](src []T, p func(v T) bool) []T {
+	j := len(src)
+	for i := 0; i < j; {
+		if p(src[i]) {
+			i++
+			continue
+		}
+
+		j--
+		src[i], src[j] = src[j], src[i]
+	}
+
+	return src[:j]
+}
+
+// FilteredInPlace partitions `src` in-place and returns two slices: kept and rejected.
+// Both returned slices share the same underlying array as `src`.
+func FilteredInPlace[T any](src []T, p func(v T) bool) ([]T, []T) {
+	rst := FilterInPlace(src, p)
+	return rst, src[len(rst):]
 }
