@@ -50,3 +50,13 @@ func FallbackP[T comparable](a *T, b T, rest ...T) {
 	}
 	*a = Fallback(*a, b, rest...)
 }
+
+func SetMapDefault[K comparable, V any](m map[K]V, k K, v V) (V, bool) {
+	w, ok := m[k]
+	if ok {
+		return w, true
+	}
+
+	m[k] = v
+	return v, false
+}
