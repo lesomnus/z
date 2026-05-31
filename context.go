@@ -32,7 +32,11 @@ func (u Use[T]) From(ctx context.Context) (T, bool) {
 func (u Use[T]) Must(ctx context.Context) T {
 	v, ok := u.From(ctx)
 	if !ok {
-		panic(fmt.Sprintf("no %v:%v is provided", reflect.TypeOf(v).PkgPath(), reflect.TypeOf(v).Name()))
+		t := reflect.TypeFor[T]()
+		for t.Kind() == reflect.Pointer {
+			t = t.Elem()
+		}
+		panic(fmt.Sprintf("no %v:%v is provided", t.PkgPath(), t.Name()))
 	}
 
 	return v
